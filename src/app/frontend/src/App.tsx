@@ -19,7 +19,7 @@ function App() {
         padding: "2rem",
       }}
     >
-      <h1 style={{ fontSize: "2.4rem", margin: 0 }}>Foundry Agents 101</h1>
+      <h1 style={{ fontSize: "2.4rem", margin: 0 }}>Foundry Agents 150</h1>
       <p style={{ fontSize: "1.2rem", color: "#94a3b8", marginTop: "0.25rem" }}>
         Lightbulb Demo
       </p>

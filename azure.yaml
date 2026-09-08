@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
-name: foundry-agents-101
+name: foundry-agents-150
 metadata:
-  template: foundry-agents-101
+  template: foundry-agents-150
 services:
   backend:
     project: src/app/backend

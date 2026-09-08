@@ -25,7 +25,7 @@
 
 Welcome to the **SmartGlow 101** — a next-generation smart lightbulb designed to be controlled by AI agents. Unlike traditional smart bulbs that rely on mobile apps or voice assistants, the SmartGlow 101 is built from the ground up to integrate with AI agent platforms using the **Model Context Protocol (MCP)**.
 
-The SmartGlow 101 is part of the **Foundry Agents 101** workshop series, a hands-on educational experience that teaches you how to build AI agents using Microsoft Foundry. Throughout the workshop, you'll connect an AI agent to the SmartGlow 101 and control it using natural language — no buttons, no switches, just conversation.
+The SmartGlow 101 is part of the **Foundry Agents 150** workshop series, a hands-on educational experience that teaches you how to build AI agents using Microsoft Foundry. Throughout the workshop, you'll connect an AI agent to the SmartGlow 101 and control it using natural language — no buttons, no switches, just conversation.
 
 ### Key Features
 
@@ -93,7 +93,7 @@ Follow these steps to deploy and access your SmartGlow 101 lightbulb.
 
 The SmartGlow 101 is deployed automatically as part of the workshop's infrastructure-as-code setup.
 
-1. Clone the **foundry-agents-101** repository to your local machine.
+1. Clone the **foundry-agents-150** repository to your local machine.
 2. Open a terminal and navigate to the repository root.
 3. Run the deployment command:
    ```
@@ -266,7 +266,7 @@ However, please observe the following guidelines during workshop use:
 
 ### Limited Warranty
 
-GlowTech Industries (a fictional subsidiary of the Foundry Agents 101 Workshop Series) warrants that the SmartGlow 101 software product will perform substantially in accordance with this manual for a period of **the duration of the workshop** from the date of deployment.
+GlowTech Industries (a fictional subsidiary of the Foundry Agents 150 Workshop Series) warrants that the SmartGlow 101 software product will perform substantially in accordance with this manual for a period of **the duration of the workshop** from the date of deployment.
 
 ### What Is Covered
 
@@ -296,7 +296,7 @@ To file a warranty claim, simply restart your deployment by running `azd up` fro
 
 The SmartGlow 101 is an open-source educational product. For support:
 
-- **Repository:** Check the [foundry-agents-101](https://github.com/PennStateLefty/foundry-agents-101/) repository for updates and issue tracking
+- **Repository:** Check the [foundry-agents-150](https://github.com/PennStateLefty/foundry-agents-150/) repository for updates and issue tracking
 - **Workshop Facilitator:** If you are attending a live workshop, ask your facilitator for help
 - **Documentation:** Refer to the unit guides in the `docs/` folder of the repository
 

@@ -37,6 +37,31 @@ module foundry 'modules/foundry.bicep' = {
   }
 }
 
+module azureAiSearch 'modules/azure-ai-search.bicep' = {
+  name: 'azure-ai-search'
+  params: {
+    searchServiceName: 'srch-${resourceToken}'
+    foundryAccountName: foundry.outputs.accountName
+    foundryProjectName: foundry.outputs.projectName
+    foundryUserPrincipalId: foundryUserPrincipalId
+    location: location
+    tags: tags
+  }
+}
+
+module observability 'modules/observability.bicep' = {
+  name: 'observability'
+  params: {
+    logAnalyticsWorkspaceName: 'log-${resourceToken}'
+    applicationInsightsName: 'appi-${resourceToken}'
+    foundryAccountName: foundry.outputs.accountName
+    foundryProjectName: foundry.outputs.projectName
+    foundryUserPrincipalId: foundryUserPrincipalId
+    location: location
+    tags: tags
+  }
+}
+
 module bingGrounding 'modules/bing-grounding.bicep' = {
   name: 'bing-grounding'
   params: {
@@ -69,3 +94,8 @@ output AZURE_WEBAPP_URL string = appService.outputs.webAppUrl
 output AZURE_FOUNDRY_NAME string = foundry.outputs.accountName
 output AZURE_FOUNDRY_ENDPOINT string = foundry.outputs.accountEndpoint
 output AZURE_BING_NAME string = bingGrounding.outputs.bingName
+output AZURE_AI_SEARCH_NAME string = azureAiSearch.outputs.searchServiceName
+output AZURE_AI_SEARCH_ENDPOINT string = azureAiSearch.outputs.searchServiceEndpoint
+output AZURE_AI_SEARCH_CONNECTION_NAME string = azureAiSearch.outputs.searchConnectionName
+output AZURE_APPLICATION_INSIGHTS_NAME string = observability.outputs.applicationInsightsName
+output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = observability.outputs.logAnalyticsWorkspaceName

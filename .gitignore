@@ -30,3 +30,6 @@ Thumbs.db
 .azure/
 
 lightbulb_remote.http
+
+# Private facilitator materials
+docs/demo-script.md
