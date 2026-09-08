@@ -111,7 +111,7 @@ If it is older than 1.33, use the platform-specific package-manager or installer
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/PennStateLefty/foundry-agents-150.git
+git clone https://github.com/pkal42/foundry-agents-150.git
 cd foundry-agents-150
 ```
 

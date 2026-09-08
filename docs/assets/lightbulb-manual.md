@@ -296,7 +296,7 @@ To file a warranty claim, simply restart your deployment by running `azd up` fro
 
 The SmartGlow 101 is an open-source educational product. For support:
 
-- **Repository:** Check the [foundry-agents-150](https://github.com/PennStateLefty/foundry-agents-150/) repository for updates and issue tracking
+- **Repository:** Check the [foundry-agents-150](https://github.com/pkal42/foundry-agents-150/) repository for updates and issue tracking
 - **Workshop Facilitator:** If you are attending a live workshop, ask your facilitator for help
 - **Documentation:** Refer to the unit guides in the `docs/` folder of the repository
 
