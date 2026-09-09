@@ -10,7 +10,7 @@ The workshop builds a `Lightbulb-Agent` and works through one enterprise agent l
 - answering from configured SmartGlow files and current public information, with an optional reusable Foundry IQ knowledge base;
 - routing requests across knowledge, read-only tools, and action tools;
 - controlling a deployed lightbulb application through MCP;
-- prepared Toolboxes and Skills **(preview for this workshop scenario)** for reusable capabilities;
+- participant-created Toolboxes and Skills **(preview for this workshop scenario)** for reusable capabilities;
 - defense in depth across identity, authorization, approvals, and content safety;
 - tracing, diagnosing, evaluating, improving, comparing, and monitoring agent quality; and
 - versions, publishing, and a stable endpoint as the path to production.
@@ -52,8 +52,8 @@ A 150-level session should still show participants what sits above the hands-on 
 
 | Demo | Advanced concept it makes concrete | Requires | If it can't run live |
 |---|---|---|---|
-| **Unit 2, Steps 3–4** — Foundry IQ knowledge base | Retrieval as a governed, curated asset that is versioned and shared across agents, rather than files attached to one agent | Azure AI Search S1 and portal agentic retrieval (**preview**) | Continue on the uploaded files from Step 2. Every later unit works unchanged. Discuss the ownership difference using the Step 6 decision table |
-| **Unit 5** — Toolboxes and Skills | Tools, credentials, and behavioral guidance as centrally governed, version-promoted assets consumed by many agents | Instructor-prepared toolbox and Skill (**preview**) | Read the unit and discuss the operating model. No later unit depends on it |
+| **Unit 2, Optional Step 4** — Foundry IQ knowledge base | Retrieval as a governed, curated asset that is versioned and shared across agents, rather than files attached to one agent | Azure AI Search S1 and portal agentic retrieval (**preview**) | Continue on the uploaded files from Step 2. Every later unit works unchanged. Discuss the ownership difference using the Step 5 decision table |
+| **Unit 5** — Toolboxes and Skills | Tools, credentials, and behavioral guidance as centrally governed, version-promoted assets consumed by many agents | Foundry portal Toolbox/Skills preview access | Use Foundry Toolkit as a fallback or follow the creation flow as an instructor demonstration. No later unit depends on it |
 | **Unit 7, Step 9** — Agent Optimizer | Closing the evaluate-change-rerun loop automatically, and reading score deltas as evidence rather than as improvement | Agent Optimizer (**preview**); the run issues real tool calls | Read the step. Steps 6–7 already teach the same loop performed manually, which is the transferable skill |
 
 Two further advanced topics are covered by discussion only, with no environment dependency at all:
@@ -70,8 +70,8 @@ Cutting a demo costs coverage of an advanced concept but never breaks a later un
 | [Unit 1](docs/unit-1-agent-scope-and-boundaries.md) | Build an Agent with Clear Scope and Boundaries | Create the baseline agent, define its job, and make supported and unsupported behavior explicit. |
 | [Unit 2](docs/unit-2-enterprise-knowledge-grounding.md) | Enterprise Knowledge and Grounding | Ground the agent with uploaded SmartGlow files, then optionally build a reusable Foundry IQ knowledge base **(preview)** when Azure AI Search is available. |
 | [Unit 3](docs/unit-3-instructions-and-capability-routing.md) | Instructions and Capability Routing | Structure instructions so the agent chooses authoritative knowledge, web grounding, or tools intentionally. |
-| [Unit 4](docs/unit-4-mcp-tools-and-actions.md) | MCP Tools and Real-World Actions | Inspect a read-only Microsoft Learn MCP call, then use MCP action tools to read and change lightbulb state. |
-| [Unit 5](docs/unit-5-toolboxes-and-skills.md) | Reusable Tools and Skills | Connect a prepared Toolbox and Skill **(preview for this workshop scenario)** to centralize reusable capabilities and behavior. |
+| [Unit 4](docs/unit-4-mcp-tools-and-actions.md) | MCP Tools and Real-World Actions | Connect one MCP server, then use its tools to read and change lightbulb state. |
+| [Unit 5](docs/unit-5-toolboxes-and-skills.md) | Reusable Tools and Skills | Create a Toolbox and Skill **(preview for this workshop scenario)** to centralize reusable capabilities and behavior. |
 | [Unit 6](docs/unit-6-safe-and-governed-actions.md) | Safe and Governed Actions | Apply defense in depth; tool-call/tool-response guardrail intervention points and human-in-the-loop approval are **preview** capabilities. |
 | [Unit 7](docs/unit-7-prove-and-improve-quality.md) | Prove and Improve Agent Quality | Run the quality loop and optionally demonstrate Agent Optimizer **(preview)**. |
 | [Unit 8](docs/unit-8-version-publish-and-operate.md) | Version, Publish, and Operate | Review versions, publishing, stable endpoints, distribution, and CI/CD without performing a live deployment. |
@@ -215,7 +215,7 @@ When enabled, Azure AI Search is connected to the Foundry project with Microsoft
 
 The deployment grants the deploying user the Foundry and telemetry access required by the labs and grants the Foundry project identity the access needed for connected services.
 
-Before participants arrive, validate sign-in, model availability, uploaded-file grounding, MCP connectivity, traces, the prepared Toolbox and Skill, datasets, and the deployed application with the same identity participants will use. If the optional Foundry IQ path is enabled, also validate Search connectivity and the curated knowledge base.
+Before participants arrive, validate sign-in, model availability, uploaded-file grounding, MCP connectivity, traces, Toolbox and Skills preview access, datasets, and the deployed application with the same identity participants will use. If the optional Foundry IQ path is enabled, also validate Search connectivity and the curated knowledge base.
 
 ### 3. Start the workshop
 
@@ -248,8 +248,8 @@ Participant ------> | Lightbulb-Agent               |
               | (optional)     |
               +----------------+
 
-Additional capabilities: Grounding with Bing, read-only Microsoft Learn MCP,
-and a prepared Toolbox + Skill (preview for this workshop scenario).
+Additional capabilities: Grounding with Bing and a participant-created Toolbox + Skill
+(preview for this workshop scenario).
 ```
 
 When the optional Search path is enabled, Foundry and Search use Microsoft Entra ID rather than embedded Search keys. Tool actions still require their own backend authentication and authorization design; connecting an MCP endpoint is not, by itself, an authorization boundary.
