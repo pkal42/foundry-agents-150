@@ -19,7 +19,7 @@ param location string
 @description('Tags to apply to resources')
 param tags object = {}
 
-var connectionName = 'application-insights'
+var connectionName = 'application-insights-project'
 var telemetryReaderRoleDefinitionIds = [
   subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '73c42c96-874c-492b-b04d-ab87d138a893') // Log Analytics Reader
   subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'dbc9c667-e97f-4491-aee6-90b9cf960190') // Privileged Monitoring Data Reader
@@ -55,24 +55,6 @@ resource foundryAccount 'Microsoft.CognitiveServices/accounts@2025-04-01-preview
 resource foundryProject 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-preview' existing = {
   parent: foundryAccount
   name: foundryProjectName
-}
-
-resource accountApplicationInsightsConnection 'Microsoft.CognitiveServices/accounts/connections@2025-04-01-preview' = {
-  parent: foundryAccount
-  name: connectionName
-  properties: {
-    authType: 'ApiKey'
-    category: 'AppInsights'
-    credentials: {
-      key: applicationInsights.properties.ConnectionString
-    }
-    isSharedToAll: true
-    metadata: {
-      ApiType: 'Azure'
-      ResourceId: applicationInsights.id
-    }
-    target: applicationInsights.id
-  }
 }
 
 resource projectApplicationInsightsConnection 'Microsoft.CognitiveServices/accounts/projects/connections@2025-04-01-preview' = {

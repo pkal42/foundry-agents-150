@@ -2,7 +2,7 @@
 
 ## Overview
 
-This 5-minute instructor-led close moves the agent from a project development asset toward an operated service. The instructor connects versioning and rollback, publishing, identity and RBAC, distribution, automation, and the next capability decision.
+This instructor-led close moves the agent from a project development asset toward an operated service. The instructor connects versioning and rollback, publishing, identity and RBAC, distribution, automation, and the next capability decision.
 
 > **📝 Terminology note:** Foundry is transitioning from the legacy **Agent Application + Deployment** model to a new agent object model. New agents have a stable `agent_endpoint` and unique identity; “publish” then refers to distribution to Microsoft 365 or Teams. Older environments can still expose a stable endpoint through an Agent Application. See the [migration comparison](https://learn.microsoft.com/azure/foundry/agents/how-to/migrate-agent-applications) and [legacy Agent Application guidance](https://learn.microsoft.com/azure/foundry/agents/how-to/agent-applications).
 
@@ -59,7 +59,7 @@ Never distribute project-wide development access when consumers only need invoke
 - Agent identity granted least-privilege RBAC and downstream API scopes
 - OAuth OBO used where actions must preserve end-user authority
 - Backend authorization and audit verified for every write
-- Knowledge freshness, ACLs, citations, and owners defined
+- Knowledge freshness, ACLs, citations, and owners defined — the operational half of the source decision made in [Unit 2, Step 6](./unit-2-enterprise-knowledge-grounding.md)
 - Guardrails and human-approval policy tested
 - Application Insights monitoring, alerts, retention, and privacy controls configured
 - Rate limits, quotas, cost thresholds, incident response, and support ownership documented
@@ -78,11 +78,13 @@ Never distribute project-wide development access when consumers only need invoke
 
 Choose the next capability only after defining its purpose, authority, evaluation evidence, and operating owner.
 
+The current preview and availability status of each capability above is recorded in the **Feature Maturity** table in the [workshop README](../README.md#feature-maturity). Check it before committing to a delivery date — several of these move quickly.
+
 ---
 
 ## Summary
 
-You now have the complete lifecycle: define boundaries, ground knowledge, route capabilities, connect tools, scale reusable assets, govern actions, prove quality, then version, publish, and operate through a stable, authorized endpoint.
+You've now seen the lifecycle end to end: define boundaries, ground knowledge, route capabilities, connect tools, reuse capabilities, govern actions, prove quality, then version, publish, and operate through a stable, authorized endpoint. What carries over to a real workload is the sequence and the questions asked at each stage, not the specific configuration of a workshop lightbulb.
 
 ---
 

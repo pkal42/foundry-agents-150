@@ -10,7 +10,7 @@ param foundryId string
 // Cognitive Services User
 var cognitiveServicesUserRoleId = 'a97b65f3-24c7-4388-baec-2e87135dc908'
 
-// Azure AI User
+// Foundry User (previously named Azure AI User; role ID unchanged by the rename)
 var azureAIUserRoleId = '53ca6127-db72-4b80-b1b0-d745d6d5456d'
 
 resource foundry 'Microsoft.CognitiveServices/accounts@2025-04-01-preview' existing = {

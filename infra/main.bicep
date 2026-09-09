@@ -6,10 +6,17 @@ targetScope = 'resourceGroup'
 param environmentName string
 
 @description('Primary Azure region for resources')
-param location string = resourceGroup().location
+param location string
 
 @description('Principal ID of the user who needs Foundry access (defaults to the deployer)')
 param foundryUserPrincipalId string = deployer().objectId
+
+@description('Deploy Azure AI Search and connect it to the Foundry project for the optional Foundry IQ exercise')
+param deployAzureAiSearch bool = false
+
+@description('App Service Plan SKU. Raise this if the target region reports no available instances for B1.')
+@allowed(['B1', 'B2', 'B3', 'S1', 'S2', 'P0V3', 'P1V3', 'P2V3'])
+param appServicePlanSku string = 'B1'
 
 var tags = {
   'azd-env-name': environmentName
@@ -24,6 +31,7 @@ module appService 'modules/app-service.bicep' = {
     webAppName: 'app-${resourceToken}'
     location: location
     tags: tags
+    appServicePlanSku: appServicePlanSku
   }
 }
 
@@ -37,7 +45,7 @@ module foundry 'modules/foundry.bicep' = {
   }
 }
 
-module azureAiSearch 'modules/azure-ai-search.bicep' = {
+module azureAiSearch 'modules/azure-ai-search.bicep' = if (deployAzureAiSearch) {
   name: 'azure-ai-search'
   params: {
     searchServiceName: 'srch-${resourceToken}'
@@ -94,8 +102,8 @@ output AZURE_WEBAPP_URL string = appService.outputs.webAppUrl
 output AZURE_FOUNDRY_NAME string = foundry.outputs.accountName
 output AZURE_FOUNDRY_ENDPOINT string = foundry.outputs.accountEndpoint
 output AZURE_BING_NAME string = bingGrounding.outputs.bingName
-output AZURE_AI_SEARCH_NAME string = azureAiSearch.outputs.searchServiceName
-output AZURE_AI_SEARCH_ENDPOINT string = azureAiSearch.outputs.searchServiceEndpoint
-output AZURE_AI_SEARCH_CONNECTION_NAME string = azureAiSearch.outputs.searchConnectionName
+output AZURE_AI_SEARCH_NAME string = deployAzureAiSearch ? azureAiSearch.outputs.searchServiceName : ''
+output AZURE_AI_SEARCH_ENDPOINT string = deployAzureAiSearch ? azureAiSearch.outputs.searchServiceEndpoint : ''
+output AZURE_AI_SEARCH_CONNECTION_NAME string = deployAzureAiSearch ? azureAiSearch.outputs.searchConnectionName : ''
 output AZURE_APPLICATION_INSIGHTS_NAME string = observability.outputs.applicationInsightsName
 output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = observability.outputs.logAnalyticsWorkspaceName

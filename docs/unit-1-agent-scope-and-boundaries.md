@@ -2,7 +2,7 @@
 
 ## Overview
 
-Welcome to Unit 1 of the **AI Agents with Microsoft Foundry** workshop! In this 12-minute unit, you'll create a portal-first **prompt agent** and define its purpose, scope, and authority before adding knowledge or tools.
+Welcome to Unit 1 of the **AI Agents with Microsoft Foundry** workshop! You'll create a portal-first **prompt agent** and define its purpose, scope, and authority before adding knowledge or tools.
 
 By the end of this unit, you'll have a working **Lightbulb-Agent** in the Foundry playground and a baseline that makes its limitations visible. It can discuss the intended task, but it cannot yet retrieve workshop documents or change application state.
 
@@ -31,6 +31,10 @@ A useful agent contract answers three questions:
 | **Authority** | What may it actually do? | Initially, only respond in chat; later units grant specific read and write tools |
 
 These are different. Instructions can describe an action, but they do not grant authority. Authority comes from connected tools, identities, and backend permissions.
+
+A job description is not building access. You can write "approves expense reports" into someone's role description, but they cannot approve anything until an administrator grants that permission in the finance system. The description states intent; the permission grants capability. Instructions are the job description. Tools, identities, and RBAC are the badge that opens the door.
+
+This distinction is the reason for the baseline test in Step 3: the agent will be told it helps control a lightbulb before it has any ability to do so.
 
 ### Prompt Agent vs. Hosted Agent
 
@@ -97,20 +101,12 @@ Turn on the light.
 What colors does the SmartGlow 101 support?
 ```
 
-```
-What's in the news today?
-```
-
-```
-Write me a poem about the ocean.
-```
-
 Record whether the agent:
 
 - States that it cannot yet control the light
 - Avoids inventing SmartGlow specifications
-- Acknowledges that it has no current web source
-- Redirects the clearly out-of-scope request
+
+You will reverse both of these limits deliberately: the second in Unit 2, the first in Unit 4.
 
 ### Step 4: Inspect the Capability Boundary
 
@@ -120,7 +116,7 @@ Review the agent configuration:
 |---|---|
 | Model response | ✅ Available |
 | Explicit purpose and scope | ✅ Defined in instructions |
-| Current web information | ❌ No web-search source selected |
+| Current web information | ❌ No web-grounding source connected |
 | SmartGlow product evidence | ❌ No document or knowledge base connected |
 | External actions | ❌ No MCP tools connected |
 | Persistent memory | ❌ Not configured |
@@ -135,7 +131,7 @@ You've created a prompt agent with an explicit purpose, scope, and authority bou
 
 ### What's Next
 
-In **[Unit 2: Enterprise Knowledge and Grounding](./unit-2-enterprise-knowledge-grounding.md)**, you'll compare public web search, uploaded files, and the Foundry IQ knowledge-base experience **(preview)**.
+In **[Unit 2: Enterprise Knowledge and Grounding](./unit-2-enterprise-knowledge-grounding.md)**, you'll compare Grounding with Bing Search, uploaded files, and the Foundry IQ knowledge-base experience **(preview)**.
 
 ---
 

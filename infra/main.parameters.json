@@ -7,6 +7,12 @@
     },
     "location": {
       "value": "${AZURE_LOCATION}"
+    },
+    "deployAzureAiSearch": {
+      "value": "${DEPLOY_AZURE_AI_SEARCH=false}"
+    },
+    "appServicePlanSku": {
+      "value": "${AZURE_APP_SERVICE_PLAN_SKU=B1}"
     }
   }
 }

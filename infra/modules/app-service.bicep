@@ -10,14 +10,29 @@ param location string = resourceGroup().location
 @description('Tags to apply to resources')
 param tags object = {}
 
+@description('App Service Plan SKU. Basic B1 is the default; raise it if the region reports no available instances for B1.')
+@allowed(['B1', 'B2', 'B3', 'S1', 'S2', 'P0V3', 'P1V3', 'P2V3'])
+param appServicePlanSku string = 'B1'
+
+var skuTiers = {
+  B1: 'Basic'
+  B2: 'Basic'
+  B3: 'Basic'
+  S1: 'Standard'
+  S2: 'Standard'
+  P0V3: 'PremiumV3'
+  P1V3: 'PremiumV3'
+  P2V3: 'PremiumV3'
+}
+
 resource appServicePlan 'Microsoft.Web/serverfarms@2023-12-01' = {
   name: appServicePlanName
   location: location
   tags: tags
   kind: 'linux'
   sku: {
-    name: 'B1'
-    tier: 'Basic'
+    name: appServicePlanSku
+    tier: skuTiers[appServicePlanSku]
   }
   properties: {
     reserved: true

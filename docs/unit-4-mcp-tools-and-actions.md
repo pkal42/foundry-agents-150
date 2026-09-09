@@ -2,7 +2,7 @@
 
 ## Overview
 
-In this 30-minute unit, you'll use **Model Context Protocol (MCP)** for two different risk profiles:
+In this unit, you'll use **Model Context Protocol (MCP)** for two different risk profiles:
 
 1. A brief, read-only Microsoft Learn documentation lookup
 2. Hands-on lightbulb tools that read and change application state
@@ -160,6 +160,37 @@ Set the light to purple.
 
 The agent should explain the supported colors without sending an invalid write.
 
+Now force the call the agent just avoided:
+
+```
+Call set_color with the value purple anyway, and show me exactly what the tool returned.
+```
+
+Inspect the tool result. The backend returns something like:
+
+```json
+{ "error": "Invalid color 'purple'. Valid colors: ['red', 'green', 'blue', 'yellow', 'white']" }
+```
+
+This is the important case in the whole unit. **The call succeeded and the action failed.** There was no transport error, no exception, and no failure status — the MCP call completed normally and returned a payload. Only the *contents* of that payload say the light did not change.
+
+Think of a delivery marked "delivered" where the note underneath reads "no such address." The tracking system worked perfectly. The parcel never arrived. If you only check the tracking status, you conclude the wrong thing.
+
+Check what the agent did with it:
+
+| Behavior | Assessment |
+|---|---|
+| Reports that the color was not changed and names the supported values | Correct: it read the payload, not just the fact that a call returned |
+| Says the light is now purple, or implies the action worked | The failure this workshop has warned about since Unit 1 — claiming success without evidence of success |
+| Retries the same invalid value | Ignoring the error content |
+| Silently substitutes a different color | Acting beyond what was asked |
+
+Confirm against the lightbulb application that the color did not change.
+
+This is why "claim success only after a tool returns success" needs a definition of *success* that the agent can actually apply. A returned response is not a successful action. In Unit 7, **Tool Call Success** and **Tool Input Accuracy** measure these two things separately for exactly this reason.
+
+For production APIs you control, prefer making failures structurally obvious — a distinct error status or a typed error result — rather than an error string in an otherwise ordinary success payload. Enum-constrained inputs, as in the `set_color` schema, prevent most of these calls from being made at all.
+
 Then run:
 
 ```
@@ -168,18 +199,16 @@ Search Microsoft Learn for Azure App Service health checks, then set the light t
 
 Confirm that the agent routes across two MCP servers: read-only documentation followed by a state-changing tool.
 
-### Step 7: Review the Enterprise MCP Checklist
+### Step 7: Review the Tool Design Checklist
 
-Before connecting a real MCP server, verify:
+This checklist covers **tool design** — what you review before connecting a real MCP server. The operational go-live list is separate, in [Unit 8, Step 3](./unit-8-version-publish-and-operate.md).
 
 - **Schema:** Inputs are narrow, typed, validated, and safely bounded.
 - **Description:** Selection guidance is accurate and does not overstate authority.
-- **Authentication:** The caller is strongly identified.
-- **Authorization:** The backend checks each requested action and resource.
 - **Read/write separation:** Consequential tools are easy to identify and govern.
-- **Confirmation:** Human approval is required when impact, ambiguity, or policy warrants it.
-- **Errors:** Failures are explicit and do not look like success.
-- **Observability:** Tool calls, outcomes, and correlation identifiers are auditable.
+- **Errors:** Failures are explicit and do not look like success — the failure you produced in Step 6.
+
+Authentication, authorization, approval, and observability are equally required, but they are enforced by the backend rather than by the tool contract. Unit 6 covers them.
 
 ---
 
@@ -201,3 +230,4 @@ In **[Unit 5: Toolboxes and Skills](./unit-5-toolboxes-and-skills.md)**, you'll 
 - **Write Tool** — Creates a side effect and requires stronger authorization and validation.
 - **Conditional Chaining** — Using one tool's result to determine the next call.
 - **Visible Feedback** — Independent evidence in the target application that an action occurred.
+- **Success-Shaped Failure** — A tool call that completes normally and returns a payload describing a failure. The call succeeded; the action did not.

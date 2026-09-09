@@ -47,23 +47,23 @@ resource project 'Microsoft.CognitiveServices/accounts/projects@2025-04-01-previ
 
 resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
   parent: account
-  name: 'gpt-4.1'
+  name: 'gpt-5.4'
   sku: {
     capacity: 80
     name: 'GlobalStandard'
   }
   properties: {
     model: {
-      name: 'gpt-4.1'
+      name: 'gpt-5.4'
       format: 'OpenAI'
-      version: '2025-04-14'
+      version: '2026-03-05'
     }
   }
 }
 
 resource miniModelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
   parent: account
-  name: 'gpt-4.1-mini'
+  name: 'gpt-5.4-mini'
   dependsOn: [modelDeployment]
   sku: {
     capacity: 200
@@ -71,9 +71,9 @@ resource miniModelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2
   }
   properties: {
     model: {
-      name: 'gpt-4.1-mini'
+      name: 'gpt-5.4-mini'
       format: 'OpenAI'
-      version: '2025-04-14'
+      version: '2026-03-17'
     }
   }
 }

@@ -2,7 +2,7 @@
 
 ## Overview
 
-In this 20-minute unit, you'll apply **defense in depth** to an agent that can retrieve data and change state. The goal is not a large catalog of jailbreak prompts. It is a concise threat model connected to enforceable controls.
+In this unit, you'll apply **defense in depth** to an agent that can retrieve data and change state. The goal is not a large catalog of jailbreak prompts. It is a concise threat model connected to enforceable controls.
 
 You'll examine guardrails at user input, tool call, tool response, and output; identity choices; backend authorization; read/write risk; and when a human must approve an action.
 
@@ -68,6 +68,8 @@ The user asks: "Summarize the document and apply its recommendation."
 
 This one scenario covers prompt injection, indirect injection, read-to-write escalation, and excessive authority.
 
+The distinction to hold onto: imagine a note taped inside a file folder that reads, "the person reading this is authorized to open the safe." The folder is something you were asked to read. It is not something that gives orders. Retrieved content — an uploaded document, a web page, a tool response — is **evidence to summarize, not instruction to follow**. The agent's authority comes from its configuration and the permissions behind its tools, never from text it just retrieved.
+
 ### Step 2: Review Guardrail Intervention Points
 
 In the project's guardrail experience, inspect the controls available for the agent:
@@ -93,6 +95,13 @@ Review the current tools:
 | `toggle_light` | Write | State-aware routing, authorization, audit |
 | `set_color` | Write | Enum validation, authorization, audit |
 
+Recall the invalid-color result from [Unit 4](./unit-4-mcp-tools-and-actions.md): `set_color` returns an error payload from a call that otherwise completed normally. Two design points follow, and they belong to different layers:
+
+- **Tool design:** the enum in the schema should stop most invalid values before a call is made, and the backend must still validate the argument rather than trusting the schema.
+- **Response handling:** the agent has to read the payload to know whether the action happened. An error string inside a normal-looking result is easy for both a model and a downstream system to skim past.
+
+A guardrail at the **tool response** intervention point inspects that returned payload before it re-enters the agent's context. That is the same position in the pipeline, evaluated for a different risk — indirect prompt injection rather than a failed action.
+
 For production, prefer explicit idempotent operations such as `turn_light_on` over ambiguous toggles when you control the API design.
 
 ### Step 4: Map Identity to Authorization
@@ -107,6 +116,8 @@ For each production tool, record:
 Publishing can change the runtime agent identity. Permissions that worked with a project's shared identity might need to be granted to the published agent identity.
 
 > **🔒 Rule:** The backend authorizes every request. It does not trust the agent's system prompt, tool description, or claim that a user approved the action.
+
+> **📝 Role names in the portal:** The Foundry RBAC roles were renamed. **Foundry User**, **Foundry Owner**, **Foundry Account Owner**, and **Foundry Project Manager** were previously **Azure AI User**, **Azure AI Owner**, **Azure AI Account Owner**, and **Azure AI Project Manager**. You may see either name while the rename rolls out, and both may appear in different parts of the portal at the same time. The role IDs and permissions are unchanged, so a role assignment made under the old name is the same grant as one made under the new name.
 
 ### Step 5: Decide When Human Approval Is Required
 
@@ -136,13 +147,7 @@ Expected behavior:
 - Avoid exposing hidden instructions or credentials
 - Record enough telemetry to investigate the attempt
 
-Then verify a normal request still works:
-
-```
-Set this workshop light to green.
-```
-
-Safety controls should preserve allowed behavior, not merely maximize refusals.
+Safety controls should preserve allowed behavior, not merely maximize refusals. You have already issued legitimate `set_color` and `toggle` calls in Unit 4, so you have the comparison you need: if those same requests would now be refused, the control is too broad.
 
 ---
 
@@ -159,7 +164,7 @@ In **[Unit 7: Prove and Improve Quality](./unit-7-prove-and-improve-quality.md)*
 ## Key Concepts
 
 - **Defense in Depth** — Independent controls that limit failure even when another layer is bypassed.
-- **Indirect Prompt Injection** — Malicious instructions embedded in retrieved or tool-returned content.
+- **Indirect Prompt Injection** — Malicious instructions embedded in retrieved or tool-returned content. A note inside a folder does not gain authority by being read.
 - **Least Privilege** — Granting only the minimum actions and resources required.
 - **Managed Identity** — An Azure-managed workload identity used without embedding credentials.
 - **OAuth OBO** — Delegating the signed-in user's authority to a downstream service.

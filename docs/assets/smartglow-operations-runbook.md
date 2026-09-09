@@ -12,11 +12,13 @@ Before the workshop, confirm that every assigned environment has:
 - A reachable Microsoft Foundry project
 - A healthy SmartGlow web application
 - Grounding with Bing
-- An Azure AI Search S1 service connected to the Foundry project
+- All three SmartGlow workshop files uploaded to the agent
 - Application Insights connected to the Foundry project
 - A Log Analytics workspace
 - Required participant and project-identity role assignments
 - A versioned Unit 7 evaluation dataset
+
+If the optional Foundry IQ exercise is enabled, also confirm that an Azure AI Search S1 service and the prepared knowledge base are connected to the Foundry project.
 
 ## Common Incidents
 
@@ -37,9 +39,9 @@ Before the workshop, confirm that every assigned environment has:
 
 ### Agent cannot retrieve curated knowledge
 
-1. Confirm the Azure AI Search connection is visible in the Foundry project.
-2. Confirm the knowledge base is online and includes the expected sources.
-3. Verify that ingestion completed after the latest source update.
+1. Confirm all three uploaded workshop files are visible in the agent's knowledge configuration.
+2. Confirm file processing completed after the latest upload.
+3. If the optional Foundry IQ path is enabled, confirm the Azure AI Search connection and knowledge base are online.
 4. Confirm citations identify the expected source and version.
 5. Review the trace to distinguish retrieval failure from instruction-routing failure.
 

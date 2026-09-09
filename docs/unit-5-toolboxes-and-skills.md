@@ -2,11 +2,13 @@
 
 ## Overview
 
-In this 17-minute unit, you'll address an enterprise scaling problem: duplicating tool connections, credentials, and behavioral guidance across many agents.
+In this unit, you'll address an enterprise scaling problem: duplicating tool connections, credentials, and behavioral guidance across many agents.
 
 You'll consume a prepared, versioned **Toolbox** and **Skill** rather than installing CLI extensions or authoring long configuration files. The focus is the operating model: reusable tools, centralized authentication and governance, controlled version promotion, and safe adoption by agents.
 
 > **📝 Preview note:** Toolboxes and Skills evolve quickly and can have regional, model, SDK, or portal limitations. Treat them as preview unless the current [Toolbox documentation](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/toolbox) and [Skills documentation](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/skills) state otherwise for your exact scenario.
+
+> **🎤 Instructor demonstration:** This unit is normally demonstrated, with participants following along in the portal. It is inspection and discussion rather than authoring. If the preview is unavailable in your environment, read the unit and discuss the operating model — no later unit depends on it. See the [instructor demo script](./instructor-demo-script.md#unit-5--reusable-tools-and-skills).
 
 ---
 
@@ -36,6 +38,8 @@ Without a shared capability layer, every agent independently configures the same
 | No version boundary | Changes reach consumers without controlled promotion |
 
 A **Toolbox** packages approved tools behind a managed endpoint. A **Skill** packages reusable behavioral or procedural guidance. Both should follow a version lifecycle.
+
+Consider a shared, maintained toolset that several teams check out from, versus every team buying and maintaining its own. The shared set is calibrated once, inspected on a schedule, and replaced as a unit. The per-team version means nobody knows which teams hold an old model, and a recall has to be chased down team by team. The problems in the table above are that second situation, described in configuration terms.
 
 ### Centralized Does Not Mean Uncontrolled
 
@@ -143,7 +147,7 @@ Do not assume that every consumer updates immediately or in the same way. Record
 
 ## Summary
 
-You've consumed a prepared Toolbox and Skill and reviewed the enterprise controls that make shared capabilities safer than duplicated agent configuration.
+You've consumed a prepared Toolbox and Skill and reviewed the controls that shared capabilities require: named owners, approved authentication, least-privilege identities, versioned promotion, a consumer inventory, and rollback. Centralizing capability moves where the risk sits — one endpoint now serves many agents — so these controls are what the model depends on, not a bonus on top of it.
 
 ### What's Next
 

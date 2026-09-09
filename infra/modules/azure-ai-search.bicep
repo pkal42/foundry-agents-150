@@ -34,11 +34,6 @@ resource searchService 'Microsoft.Search/searchServices@2025-05-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    authOptions: {
-      aadOrApiKey: {
-        aadAuthFailureMode: 'http401WithBearerChallenge'
-      }
-    }
     disableLocalAuth: true
     hostingMode: 'Default'
     partitionCount: 1

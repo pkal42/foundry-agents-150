@@ -2,13 +2,13 @@
 
 ## Overview
 
-In this 25-minute unit, you'll give **Lightbulb-Agent** evidence it can retrieve and cite. You'll compare three source patterns:
+In this unit, you'll give **Lightbulb-Agent** evidence it can retrieve and cite. You'll compare three source patterns:
 
-1. **Web search** for current public information
+1. **Grounding with Bing Search** for current public information
 2. **Uploaded files** for quick, agent-specific grounding
 3. **Foundry IQ knowledge bases** for reusable, curated enterprise knowledge backed by Azure AI Search
 
-The hands-on path begins with the SmartGlow manual, then uses multiple workshop documents to create or inspect a curated knowledge base where the environment permits.
+The required hands-on path uses all three SmartGlow documents as uploaded agent files. Where Azure AI Search capacity and Foundry IQ are available, an optional extension moves the same sources into a reusable knowledge base.
 
 > **📝 Preview note:** Foundry IQ availability varies by feature and API version. The Microsoft Foundry and Azure portal experiences for agentic retrieval are preview. Check the current [Foundry IQ documentation](https://learn.microsoft.com/azure/foundry/agents/concepts/what-is-foundry-iq) before production adoption.
 
@@ -24,9 +24,10 @@ Before starting this unit, make sure you have:
   - [`assets/lightbulb-manual.md`](./assets/lightbulb-manual.md)
   - [`assets/smartglow-support-policy.md`](./assets/smartglow-support-policy.md)
   - [`assets/smartglow-operations-runbook.md`](./assets/smartglow-operations-runbook.md)
-- ✅ The **Azure AI Search S1** service provisioned and connected by workshop infrastructure
 
-> **⚠️ Important:** Infrastructure provisions and connects the S1 Search service. It does **not** automatically create a Foundry IQ knowledge base. Knowledge sources and the knowledge base must be authored in the portal or prepared before the session.
+For the optional Foundry IQ extension, you also need an **Azure AI Search S1** service provisioned and connected by workshop infrastructure.
+
+> **⚠️ Important:** Azure AI Search is not required for the core workshop path. When enabled, infrastructure provisions and connects the S1 Search service but does **not** automatically create a Foundry IQ knowledge base. Knowledge sources and the knowledge base must be authored in the portal or prepared before the session.
 
 ---
 
@@ -34,7 +35,7 @@ Before starting this unit, make sure you have:
 
 | Source | Best for | Strength | Tradeoff |
 |---|---|---|---|
-| **Web search** | Current public facts and news | Fresh, broad coverage with web citations | Public data, variable authority, external-query considerations |
+| **Grounding with Bing Search** | Current public facts and news | Fresh, broad coverage with web citations | Public data, variable authority, data leaves the Azure compliance boundary, usage-based cost |
 | **Uploaded files / file search** | Fast proof of concept with a few controlled documents | Simple, agent-specific setup | Manual refresh and limited reuse/governance |
 | **Foundry IQ knowledge base** | Shared enterprise content across sources and agents | Curated retrieval, citations, reusable knowledge, permission-aware patterns | Requires source design, Search capacity, identity, and lifecycle ownership |
 
@@ -49,6 +50,7 @@ Teach the agent to:
 3. Surface conflicts instead of silently choosing a convenient source.
 4. Say when evidence is missing or stale.
 5. Use the web only when freshness or public context is required.
+6. Never substitute public web or GitHub results for configured SmartGlow knowledge.
 
 ### Curated Source Authority
 
@@ -62,17 +64,34 @@ The three workshop documents intentionally demonstrate that “newest” and “
 
 Freshness metadata helps resolve conflicts, but date alone is not enough. Source ownership, audience, subject, and an explicit supersession statement determine authority.
 
+Think of an employee handbook published in 2020 and a policy memo issued last month. The memo does not replace the handbook wholesale — it supersedes it only on the topics it actually addresses. For everything else, the handbook still stands. That is exactly the relationship between the product manual and the support policy below, and it is why "newest wins" is the wrong rule to teach an agent.
+
 ---
 
 ## Steps
 
 ### Step 1: Add Current Public Knowledge
 
+The workshop uses **Grounding with Bing Search**, preprovisioned as a G1 resource and connected to your Foundry project.
+
+Foundry offers more than one way to reach the public web. Both are generally available and both are Bing-backed; they differ in **who owns the resource**:
+
+| | **Grounding with Bing Search** (this workshop) | **Web search** |
+|---|---|---|
+| Bing resource | Created and owned by your organization | Managed by Microsoft |
+| Project connection | An explicit connection you configure and can audit | None required |
+| Roles needed | Contributor or Owner to create the resource; Foundry Project Manager to create the connection | No roles beyond project access |
+| Parameters | `count`, `freshness`, `market`, `set_lang` | `user_location`, `search_context_size` |
+| Models | Azure OpenAI models and Foundry models sold by Azure | Azure OpenAI models |
+
+The workshop teaches the enterprise-managed path. When your organization creates the Bing resource and the project connection, the dependency becomes a resource you can see in your subscription, place under RBAC, attribute cost to, and revoke. That visibility is the point: an agent's external dependencies should appear in the same inventory and controls as the rest of your estate, not arrive as an implicit capability.
+
+Web search is a reasonable choice for a quick prototype, where not having to create a Bing resource is an advantage rather than a gap. It is not preview — it is a different ownership model.
+
 1. Open **Build** > **Agents** > **Lightbulb-Agent**.
-2. In **Tools**, review the available web options.
-3. Use the instructor-designated **Grounding with Bing Search** connection if it was preprovisioned for the workshop. If the portal presents **Web search (preview)** instead, follow the instructor's configuration and treat it as a preview capability.
-4. Save the agent.
-5. Test:
+2. In **Tools**, select the preprovisioned **Grounding with Bing Search** connection for the workshop.
+3. Save the agent.
+4. Test:
 
    ```
    What are the latest developments in smart-home lighting? Cite the public sources you used.
@@ -80,17 +99,47 @@ Freshness metadata helps resolve conflicts, but date alone is not enough. Source
 
 Confirm that the answer is current and includes usable citations. Do not use this source for private SmartGlow policy.
 
-### Step 2: Upload the SmartGlow Manual
+> **⚠️ Data boundary:** Grounding with Bing Search is a First Party Consumption Service. Data sent to it **flows outside the Azure compliance and Geo boundary**, and the Microsoft Data Protection Addendum does not apply to it. It is governed by the Grounding with Bing terms of use and carries its own usage-based cost. Owning the resource gives you control over the connection; it does not move the data back inside the Azure boundary. Confirm both points with your compliance owner before using web grounding in production. The same boundary applies to Web search and to Grounding with Bing Custom Search **(preview)**.
 
-1. Review [`assets/lightbulb-manual.md`](./assets/lightbulb-manual.md). Identify supported colors, limitations, troubleshooting, safety, and warranty details.
+#### Note: Web IQ
+
+You may hear **Web IQ** discussed alongside the tools above. It is a different thing, and the naming overlap with Foundry IQ causes real confusion, so it is worth separating here.
+
+Web IQ is one of four capabilities in **Microsoft IQ**, the intelligence layer Microsoft describes across its stack:
+
+| Capability | Provides |
+|---|---|
+| **Work IQ** | Context on people, collaboration, and workflows |
+| **Fabric IQ** | Business entities, relationships, properties, and rules |
+| **Foundry IQ** | Curated institutional knowledge — policies, authoritative documents, reusable knowledge bases (Unit 2's optional extension) |
+| **Web IQ** | Retrieval of current information from the public web |
+
+So Foundry IQ and Web IQ are siblings in the same family, one pointed at your curated internal knowledge and one at the open web. That is the useful mental model, and it maps onto the distinction this unit already makes between private evidence and public evidence.
+
+How Web IQ differs from the tools you configured:
+
+- It returns **structured, citation-ready data to the developer** with passage-level retrieval, rather than handing the agent a grounded answer. Your code decides what enters the model's context.
+- Microsoft positions it as agent-native, aimed at multi-step workflows needing fine-grained control over retrieval and orchestration, and positions Grounding with Bing as the entry point for search-style web augmentation.
+- It is currently **limited access**.
+
+**This workshop does not use Web IQ.** Grounding with Bing Search is the correct tool for the workshop scenario and for most agents that need a grounded, cited answer from the public web. Web IQ is worth investigating when you need control over the retrieved passages themselves. Check current availability and terms before planning around it.
+
+### Step 2: Upload the SmartGlow Workshop Files
+
+1. Review the product manual, support policy, and operations runbook. Identify their different owners, audiences, and areas of authority.
 2. In the agent's **Tools** or **Knowledge** area, choose the portal option for uploading files or file search.
-3. Upload `lightbulb-manual.md` and wait for processing to finish.
+3. Upload all three workshop files and wait for processing to finish:
+   - `lightbulb-manual.md`
+   - `smartglow-support-policy.md`
+   - `smartglow-operations-runbook.md`
 4. Save the agent.
-5. Add this routing rule to the agent instructions:
+5. Add this **source rule** to the agent instructions:
 
    ```
-   For SmartGlow product specifications, supported features, safety, and product behavior, use the SmartGlow Product Manual before public web search. Cite the document used. If the document does not contain the answer, say what evidence is missing.
+   For SmartGlow facts, use only the configured workshop files or Foundry IQ knowledge base. Do not use public web search, GitHub search, model knowledge, or a similarly named repository as a fallback. Cite the configured document used. If the configured sources do not contain the answer, say what evidence is missing instead of searching the public web.
    ```
+
+   This rule says *which sources are allowed*. It deliberately does not yet say which document wins when two of them disagree — you'll add that in Step 5, after seeing the conflict for yourself.
 
 6. Test:
 
@@ -100,21 +149,13 @@ Confirm that the answer is current and includes usable citations. Do not use thi
 
 Expected evidence: the answer names the supported presets, explains the brightness limitation, and cites the manual.
 
-### Step 3: Compare Source Selection
+Treat a fluent answer as a failure if its citation points to public GitHub, another workshop repository, or any source other than the configured `lightbulb-manual.md`.
 
-Run these prompts and inspect citations or tool activity:
+### Optional Step 3: Create or Inspect a Curated Foundry IQ Knowledge Base
 
-| Prompt | Intended source |
-|---|---|
-| `According to the product manual, how do I make a warranty claim?` | Uploaded manual, while clearly identifying it as version 1.0 guidance |
-| `What are today's smart-home headlines?` | Web search |
-| `What does SmartGlow support require before escalation?` | Missing until the support policy is included |
+> **🎤 Instructor demonstration:** Steps 3–4 are normally demonstrated rather than performed by participants, because the uploaded files from Step 2 carry every later unit. See the [instructor demo script](./instructor-demo-script.md#unit-2--enterprise-knowledge-and-grounding). Run them yourself only if your facilitator says the schedule allows.
 
-For the third prompt, a correct answer should disclose missing evidence rather than search the public web for an internal policy. The first prompt establishes an intentionally stale baseline that the curated knowledge base will correct.
-
-### Step 4: Create or Inspect a Curated Foundry IQ Knowledge Base
-
-This exercise has two supported workshop modes.
+Complete this extension only when Azure AI Search and Foundry IQ are available. Otherwise, continue to Step 5 with the uploaded files.
 
 | Mode | Participant action | Instructor/pre-session action |
 |---|---|---|
@@ -145,19 +186,25 @@ This exercise has two supported workshop modes.
 3. Inspect its knowledge sources and verify that all three workshop documents are present.
 4. Note who owns source refresh, access control, and promotion to production.
 
-> **📝 Note:** Uploading a file to one agent and creating a reusable Foundry IQ knowledge source are separate operations. If indexing cannot complete during the unit, continue with the prepared knowledge base or use the manual upload for the remaining tests.
+> **📝 Note:** Uploading files to one agent and creating reusable Foundry IQ knowledge sources are separate operations. If indexing cannot complete, keep the uploaded files connected and continue with the core workshop.
 
-### Step 5: Connect and Test the Knowledge Base
+### Optional Step 4: Connect and Test the Knowledge Base
 
 1. Open **Lightbulb-Agent**.
 2. Add the prepared or newly created `smartglow-workshop-kb` from the agent's knowledge configuration.
 3. If the same documents are still attached through file search, follow the instructor's direction: temporarily remove the duplicate file attachment or use traces to make the intended retrieval path unambiguous.
 4. Save the agent and start a new conversation.
-5. Test across the curated set:
+5. Continue to Step 5 and run the same required tests against the knowledge base. Compare its retrieval trace and citations with the uploaded-file baseline.
 
-   ```
-   A participant's light resets after the service restarts, and then the app becomes unavailable. Is the reset expected, should the participant rerun azd up, and what should the support owner do? Cite each workshop document you rely on.
-   ```
+### Step 5: Test Precedence, Citations, and Missing Evidence
+
+Use whichever SmartGlow knowledge source is configured: the uploaded workshop files from Step 2 or the optional Foundry IQ knowledge base from Steps 3–4.
+
+First, test retrieval across all three sources:
+
+```
+A participant's light resets after the service restarts, and then the app becomes unavailable. Is the reset expected, should the participant rerun azd up, and what should the support owner do? Cite each workshop document you rely on.
+```
 
 The answer should:
 
@@ -167,13 +214,13 @@ The answer should:
 - Explain that the support policy supersedes conflicting manual deployment, support, and warranty-claim instructions.
 - Avoid treating all three documents as equally authoritative for every subject.
 
-### Step 6: Test Precedence, Citations, and Missing Evidence
-
-Add this rule to the instructions:
+**Append** this **precedence rule** below the source rule you added in Step 2. That rule is still in the agent's instructions — instructions persist across conversations, so starting a new conversation in the optional steps did not remove it. The new rule adds authority by subject and does not repeat what the source rule already says:
 
 ```
 For SmartGlow sources, apply authority by subject. Use Product Manual version 1.0 for specifications and supported capabilities. Use Support Policy version 2.0 for participant support, deployment actions, and warranty claims because it explicitly supersedes conflicting manual guidance. Use Operations Runbook version 1.1 for organizer health checks and incident response. Cite source titles and versions. When sources conflict outside these rules, show the conflict and ask for human clarification.
 ```
+
+You now have two short rules that do different jobs: one restricts *which* sources are allowed, the other decides *which one wins* by subject. Keep them separate — when routing misbehaves later, you want to know which of the two failed.
 
 Test the intentional conflict:
 
@@ -199,35 +246,40 @@ What is SmartGlow's policy for international warranty transfers?
 
 A strong response cites no irrelevant source, says the curated evidence does not establish such a policy, and directs the user to the policy owner. Absence of evidence is not permission to invent a rule or search the public web for a private policy.
 
-### Step 7: Make the Enterprise Decision
+### Step 6: Make the Enterprise Decision
 
-For a real workload, document:
+You have now seen three source patterns behave differently on the same questions. Decide which one you would take into a real workload, and record why against the four questions that determine source choice:
 
-- **Authority:** Who owns and approves each source?
-- **Freshness:** How is content refreshed and stale content retired?
-- **Permissions:** Must retrieval honor the caller's identity or source ACLs?
-- **Residency and compliance:** Where are content, queries, and telemetry processed?
-- **Scale:** Is knowledge shared across agents, teams, or environments?
-- **Quality:** How will citation fidelity, coverage, and conflicting evidence be evaluated?
-- **Cost:** What Search tier, indexing, model, and query volume are required?
+- **Authority:** Who owns and approves each source, and who resolves conflicts between them?
+- **Permissions:** Must retrieval honor the caller's identity or source ACLs, or is the corpus uniformly readable?
+- **Residency and compliance:** Where are content, queries, and telemetry processed? Web grounding leaves the Azure boundary; uploaded files and Search do not.
+- **Scale:** Is this knowledge attached to one agent, or shared across agents, teams, and environments?
+
+Freshness, citation quality, cost, and Search tier matter just as much, but they are operational commitments rather than source-selection criteria. They appear in the production checklist in [Unit 8, Step 3](./unit-8-version-publish-and-operate.md).
+
+The decision is rarely one pattern. It is usually uploaded files for a narrow, agent-specific corpus, a shared knowledge base for anything two agents both need, and web grounding only where public currency genuinely matters.
 
 ---
 
 ## Summary
 
-You grounded the agent with current public information and authoritative workshop content, then moved from an agent-specific file to a reusable multi-source knowledge-base pattern.
+You grounded the agent with current public information and authoritative uploaded workshop files. Where capacity permitted, you also compared that baseline with a reusable multi-source Foundry IQ knowledge-base pattern.
 
 ### What's Next
 
 In **[Unit 3: Instructions and Capability Routing](./unit-3-instructions-and-capability-routing.md)**, you'll turn these source decisions into a concise routing contract.
+
+All later units use the configured SmartGlow knowledge source and do not require Azure AI Search specifically.
 
 ---
 
 ## Key Concepts
 
 - **Grounding** — Basing an answer on retrieved evidence rather than model training alone.
+- **Grounding with Bing Search** — Web grounding through a Bing resource your organization creates, connects, and governs.
 - **File Search** — Agent-specific retrieval over uploaded files, useful for quick experiments.
 - **Foundry IQ** — A managed knowledge layer for reusable, multi-source, permission-aware retrieval.
+- **Web IQ** — The Microsoft IQ capability for public-web retrieval, returning structured passages to the developer. Limited access; not used in this workshop.
 - **Knowledge Source** — A configured connection to indexed or remote content.
 - **Knowledge Base** — A reusable resource that groups sources and retrieval parameters.
 - **Citation Fidelity** — Whether claims can be traced to the evidence actually used.
