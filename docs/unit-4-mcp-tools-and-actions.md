@@ -2,10 +2,10 @@
 
 ## Overview
 
-In this unit, you'll use **Model Context Protocol (MCP)** for two different risk profiles:
+In this unit, you'll connect the SmartGlow **Model Context Protocol (MCP)** server and use:
 
-1. A brief, read-only Microsoft Learn documentation lookup
-2. Hands-on lightbulb tools that read and change application state
+1. `get_light_state` to read application state
+2. `toggle_light` and `set_color` to change application state
 
 You'll examine tool schemas, authentication, read versus write behavior, conditional chaining, and visible application feedback.
 
@@ -36,7 +36,7 @@ An MCP server exposes tools with:
 
 | Operation | Example | Primary concern |
 |---|---|---|
-| **Read** | Search documentation, get light state | Data exposure, freshness, source quality |
+| **Read** | Get light state | Data exposure and freshness |
 | **Write** | Toggle power, set color | Authorization, validation, idempotency, confirmation, audit |
 
 MCP standardizes discovery and invocation. It does not make a tool safe by itself.
@@ -45,28 +45,7 @@ MCP standardizes discovery and invocation. It does not make a tool safe by itsel
 
 ## Steps
 
-### Step 1: Connect the Read-Only Microsoft Learn MCP Server
-
-1. Open **Build** > **Agents** > **Lightbulb-Agent**.
-2. In **Tools**, select **Add** > **Custom** > **MCP**.
-3. Configure:
-
-   | Setting | Value |
-   |---|---|
-   | Server endpoint | `https://learn.microsoft.com/api/mcp` |
-   | Authentication | Unauthenticated |
-   | Name | `Microsoft-Learn-Docs` |
-
-4. Connect and inspect the discovered tool names, descriptions, and schemas.
-5. Save, then test:
-
-   ```
-   Using Microsoft Learn, explain managed identities in Azure and cite the documentation.
-   ```
-
-Confirm that the agent uses the MCP tool rather than generic web search. This server retrieves public documentation and is read-only.
-
-### Step 2: Inspect the Lightbulb Tool Contract
+### Step 1: Connect and Inspect the Lightbulb MCP Server
 
 The workshop MCP endpoint is:
 
@@ -74,20 +53,8 @@ The workshop MCP endpoint is:
 {AZURE_WEBAPP_URL}/mcp
 ```
 
-It exposes:
-
-| Tool | Type | Contract |
-|---|---|---|
-| `get_light_state` | Read | Return current power and color |
-| `toggle_light` | Write | Invert current power state |
-| `set_color` | Write | Set `red`, `green`, `blue`, `yellow`, or `white` |
-
-Notice that `toggle_light` is not an idempotent “turn on” operation. The agent must read state first when the requested end state matters.
-
-### Step 3: Connect the Lightbulb MCP Server
-
 1. Keep the lightbulb application open in one browser window.
-2. In the agent's **Tools** section, add another **Custom** > **MCP** connection.
+2. In the agent's **Tools** section, select **Add** > **Custom** > **MCP**.
 3. Configure:
 
    | Setting | Value |
@@ -96,33 +63,42 @@ Notice that `toggle_light` is not an idempotent “turn on” operation. The age
    | Authentication | Unauthenticated for this workshop only |
    | Name | `Lightbulb-Controller` |
 
-4. Connect and verify that the three tools are discovered.
-5. Inspect the `set_color` schema. The allowed values should match the backend's supported colors.
-6. Save the agent.
+4. Connect the server. If an approval setting is shown, keep the default that requires reviewing tool calls.
+5. Save the agent and start a new conversation.
+6. Ask:
+
+   ```
+   What is the current state of the light?
+   ```
+
+7. If an approval card appears, confirm that the proposed tool is `get_light_state`, then approve it.
+8. Expand the playground activity or tool-call details and confirm that `get_light_state` returned the current power and color.
+
+The portal might show only the MCP server connection during setup rather than listing every remote tool. A successful `get_light_state` call confirms that discovery and invocation are working. The server provides:
+
+| Tool | Type | What it does |
+|---|---|---|
+| `get_light_state` | Read | Returns current power and color |
+| `toggle_light` | Write | Changes the current power state |
+| `set_color` | Write | Sets `red`, `green`, `blue`, `yellow`, or `white` |
 
 > **💡 Tip:** A schema is both routing context and an API boundary. The backend must still validate every argument and caller.
 
-### Step 4: Test Read and Write Operations
+`toggle_light` changes the current state rather than directly setting “on” or “off.” When the requested final state matters, the agent should read the state first.
+
+### Step 2: Test Write Operations
 
 Arrange the Foundry playground and lightbulb application side by side.
 
-1. Read state:
-
-   ```
-   What's the current state of the light?
-   ```
-
-   Confirm that `get_light_state` runs and no state changes.
-
-2. Request a target state:
+1. Request a target state:
 
    ```
    Turn on the light.
    ```
 
-   A correct sequence reads state first. It calls `toggle_light` only if the light is off.
+   Review and approve the proposed calls if prompted. A correct sequence reads state first and calls `toggle_light` only if the light is off.
 
-3. Change color:
+2. Change color:
 
    ```
    Change the light to blue.
@@ -132,7 +108,7 @@ Arrange the Foundry playground and lightbulb application side by side.
 
 Visible feedback proves that the tool changed application state; the agent's prose alone does not.
 
-### Step 5: Test Conditional Chaining
+### Step 3: Test Conditional Chaining
 
 Run:
 
@@ -150,7 +126,9 @@ Expected path:
 
 Test the same prompt twice. On the second run, the agent should not toggle an already-on light.
 
-### Step 6: Test Schema and Capability Boundaries
+### Step 4: Test Schema and Capability Boundaries
+
+You do not select a remote tool from a separate tool menu. Ask the agent in the playground, then expand the activity or approval card to inspect the tool name, arguments, and returned result.
 
 Run:
 
@@ -158,55 +136,25 @@ Run:
 Set the light to purple.
 ```
 
-The agent should explain the supported colors without sending an invalid write.
-
-Now force the call the agent just avoided:
-
-```
-Call set_color with the value purple anyway, and show me exactly what the tool returned.
-```
-
-Inspect the tool result. The backend returns something like:
-
-```json
-{ "error": "Invalid color 'purple'. Valid colors: ['red', 'green', 'blue', 'yellow', 'white']" }
-```
-
-This is the important case in the whole unit. **The call succeeded and the action failed.** There was no transport error, no exception, and no failure status — the MCP call completed normally and returned a payload. Only the *contents* of that payload say the light did not change.
-
-Think of a delivery marked "delivered" where the note underneath reads "no such address." The tracking system worked perfectly. The parcel never arrived. If you only check the tracking status, you conclude the wrong thing.
-
-Check what the agent did with it:
+The agent should explain that purple is unsupported and should not call `set_color`. Confirm in the playground activity that no write was sent and verify in the lightbulb application that the color did not change.
 
 | Behavior | Assessment |
 |---|---|
-| Reports that the color was not changed and names the supported values | Correct: it read the payload, not just the fact that a call returned |
-| Says the light is now purple, or implies the action worked | The failure this workshop has warned about since Unit 1 — claiming success without evidence of success |
-| Retries the same invalid value | Ignoring the error content |
-| Silently substitutes a different color | Acting beyond what was asked |
+| Explains the supported colors and makes no call | Correct |
+| Calls `set_color` with purple but reports the returned error | The backend prevented the invalid change |
+| Claims the light is purple | Incorrect: there is no evidence that the action succeeded |
+| Silently chooses another color | Incorrect: the agent changed the user's request |
 
-Confirm against the lightbulb application that the color did not change.
+Think of a remote control with only five color buttons. Asking for purple should not cause the agent to press a different button or pretend a purple button exists. The tool description helps prevent the request, and the backend still validates any call that reaches it.
 
-This is why "claim success only after a tool returns success" needs a definition of *success* that the agent can actually apply. A returned response is not a successful action. In Unit 7, **Tool Call Success** and **Tool Input Accuracy** measure these two things separately for exactly this reason.
-
-For production APIs you control, prefer making failures structurally obvious — a distinct error status or a typed error result — rather than an error string in an otherwise ordinary success payload. Enum-constrained inputs, as in the `set_color` schema, prevent most of these calls from being made at all.
-
-Then run:
-
-```
-Search Microsoft Learn for Azure App Service health checks, then set the light to yellow.
-```
-
-Confirm that the agent routes across two MCP servers: read-only documentation followed by a state-changing tool.
-
-### Step 7: Review the Tool Design Checklist
+### Step 5: Review the Tool Design Checklist
 
 This checklist covers **tool design** — what you review before connecting a real MCP server. The operational go-live list is separate, in [Unit 8, Step 3](./unit-8-version-publish-and-operate.md).
 
 - **Schema:** Inputs are narrow, typed, validated, and safely bounded.
 - **Description:** Selection guidance is accurate and does not overstate authority.
 - **Read/write separation:** Consequential tools are easy to identify and govern.
-- **Errors:** Failures are explicit and do not look like success — the failure you produced in Step 6.
+- **Errors:** Unsupported or unsuccessful actions are reported clearly and never described as successful.
 
 Authentication, authorization, approval, and observability are equally required, but they are enforced by the backend rather than by the tool contract. Unit 6 covers them.
 
@@ -214,7 +162,7 @@ Authentication, authorization, approval, and observability are equally required,
 
 ## Summary
 
-You've connected MCP servers for both retrieval and action, inspected their contracts, and verified conditional tool chaining through visible application state.
+You've connected one MCP server, used a read tool and write tools, inspected their contracts, and verified the result through visible application state.
 
 ### What's Next
 
@@ -230,4 +178,4 @@ In **[Unit 5: Toolboxes and Skills](./unit-5-toolboxes-and-skills.md)**, you'll 
 - **Write Tool** — Creates a side effect and requires stronger authorization and validation.
 - **Conditional Chaining** — Using one tool's result to determine the next call.
 - **Visible Feedback** — Independent evidence in the target application that an action occurred.
-- **Success-Shaped Failure** — A tool call that completes normally and returns a payload describing a failure. The call succeeded; the action did not.
+- **Input Validation** — Checking that a requested value is allowed before changing application state.
