@@ -36,7 +36,7 @@ Think of the instructions as a **job description** and tools and permissions as 
 
 ### Prompt Agent vs. Hosted Agent
 
-> **🎤 Instructor note:** This workshop uses a **prompt agent**, configured in the portal with instructions, knowledge, and tools. Hosted agents add custom application code and runtime control, but participants do not need that distinction to complete this unit.
+> **📝 Note:** This workshop uses a **prompt agent**, configured in the portal with instructions, knowledge, and tools. Hosted agents add custom application code and runtime control, but participants do not need that distinction to complete this unit.
 
 ---
 
@@ -77,9 +77,9 @@ Think of the instructions as a **job description** and tools and permissions as 
 
 8. Save the agent.
 
-> **⚠️ Always inspect what is already enabled.** New agents can include tools such as **Web search** by default. Turn them off for this baseline so you can clearly see what the agent can and cannot do before you add capabilities.
+> **⚠️ Important:** Always inspect what is already enabled. New agents can include tools such as **Web search** by default. Turn them off for this baseline so you can clearly see what the agent can and cannot do before you add capabilities.
 
-> **💡 Tip:** Instructions can tell the agent to control a light, but only a connected tool can actually change it.
+> **📝 Note:** Instructions can tell the agent to control a light, but only a connected tool can actually change it.
 
 ### Step 2: Establish the Baseline
 

@@ -10,7 +10,7 @@ In this unit, you'll give **Lightbulb-Agent** information it can retrieve and ci
 
 The required path uses uploaded SmartGlow files. An optional exercise shows how the same information can be managed as a reusable Foundry IQ knowledge base.
 
-> **📝 Preview note:** The portal experience used for the optional Foundry IQ exercise is preview and might not be available in every environment.
+> **📝 Note:** The portal experience used for the optional Foundry IQ exercise is preview and might not be available in every environment.
 
 ---
 
@@ -20,6 +20,7 @@ Before starting this unit, make sure you have:
 
 - ✅ Completed [Unit 1](./unit-1-agent-scope-and-boundaries.md)
 - ✅ Access to **Lightbulb-Agent** in the Foundry playground
+- ✅ Access to the deployed workshop **Grounding with Bing Search** resource
 - ✅ The workshop files:
   - [`assets/lightbulb-manual.md`](./assets/lightbulb-manual.md)
   - [`assets/smartglow-support-policy.md`](./assets/smartglow-support-policy.md)
@@ -61,20 +62,20 @@ An explicit supersession statement controls only the subjects it covers. If auth
 
 ### Step 1: Add Current Public Knowledge
 
-The workshop uses **Grounding with Bing Search** for current public information. Your organization owns the Bing resource and its connection to the Foundry project.
+The workshop uses **Grounding with Bing Search** for current public information. Your organization owns the Bing resource, and you will connect it to the Foundry project before adding it to the agent.
 
 1. Open **Build** > **Agents** > **Lightbulb-Agent**.
-2. In **Tools**, select the preprovisioned **Grounding with Bing Search** connection for the workshop.
-3. Confirm that no other web tool is selected. The agent should have one clear route to public information.
-4. Save the agent.
-5. Test:
+2. In **Tools**, select **Add**, then choose **Grounding with Bing Search** from **Configured** or **Catalog**.
+11. Select the preprovisioned **Grounding with Bing Search** connection for the workshop.
+12. Confirm that no other web tool is selected. The agent should have one clear route to public information.
+13. Save the agent and start a new conversation.
+14. Test:
 
    ```
    What are the latest developments in smart-home lighting? Cite the public sources you used.
    ```
 
 Confirm that the answer includes current public sources.
-
 Now ask:
 
 ```
@@ -85,7 +86,7 @@ The agent might find a confident answer on the public web. The answer could even
 
 This is like finding a company policy through an internet search instead of using the approved employee portal. The information might match, but you cannot rely on it as the company's authoritative source.
 
-> **⚠️ Enterprise note — public-web data boundary:** When the agent uses Grounding with Bing Search, the search query is sent to the Bing service outside the Azure compliance and geographic boundary. The Microsoft Data Protection Addendum does not apply to this service; its own terms of use and usage-based charges apply. Owning the Bing resource gives your organization visibility, access control, cost attribution, and the ability to remove the connection, but it does not keep the query inside your Azure tenant. Before production use, decide what information may appear in search queries, avoid sending confidential or personal data, and confirm the design with your security and compliance owners.
+> **⚠️ Important:** When the agent uses Grounding with Bing Search, the search query is sent to the Bing service outside the Azure compliance and geographic boundary. The Microsoft Data Protection Addendum does not apply to this service; its own terms of use and usage-based charges apply. Owning the Bing resource gives your organization visibility, access control, cost attribution, and the ability to remove the connection, but it does not keep the query inside your Azure tenant. Before production use, decide what information may appear in search queries, avoid sending confidential or personal data, and confirm the design with your security and compliance owners.
 
 ### Step 2: Upload the SmartGlow Workshop Files
 
@@ -146,7 +147,7 @@ The agent should say that the configured sources do not provide this policy and 
 
 ### Optional Step 4: Try Foundry IQ
 
-> **🎤 Optional hands-on extension:** Complete this exercise only when Azure AI Search and Foundry IQ are available. If a prepared knowledge base exists, open it instead of creating another one. If indexing does not complete, reconnect the uploaded files and continue to Step 5.
+> **📝 Note:** This optional exercise requires Azure AI Search and Foundry IQ. If a prepared knowledge base exists, open it instead of creating another one. If indexing does not complete, reconnect the uploaded files and continue to Step 5.
 
 1. In the Foundry project, open **Build** > **Knowledge** and select the connected workshop **Azure AI Search S1** service.
 2. Create or open the knowledge base named `smartglow-workshop-kb`.
