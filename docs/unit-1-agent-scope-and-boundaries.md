@@ -12,9 +12,9 @@ By the end of this unit, you'll have a working **Lightbulb-Agent** in the Foundr
 
 Before starting this unit, make sure you have:
 
-- ✅ The assigned [Microsoft Foundry](https://ai.azure.com) project link
-- ✅ The workshop identity supplied by the organizer
-- ✅ The assigned lightbulb application link
+- ✅ The [Microsoft Foundry](https://ai.azure.com) project link
+- ✅ The workshop identity 
+- ✅ The lightbulb application link
 
 > **📝 Note:** The organizer provisions and validates the environment before the workshop. Participants do not run `azd`, deploy resources, or change Azure role assignments. Use the **Foundry (new)** experience; portal labels can change, but this workshop uses **Build** > **Agents** and a prompt agent configured in the portal.
 
@@ -53,7 +53,7 @@ This workshop begins with a prompt agent so you can focus on lifecycle decisions
 
 1. Open [Microsoft Foundry](https://ai.azure.com) and select the project created by setup.
 2. Select **Build** > **Agents**.
-3. Select **Create agent** and choose the portal's prompt-agent option if prompted.
+3. Select **New agent** -> **Build an agent** and choose the portal's prompt-agent option if prompted.
 4. Name the agent:
 
    ```
@@ -61,6 +61,10 @@ This workshop begins with a prompt agent so you can focus on lifecycle decisions
    ```
 
 5. Select the predeployed workshop model.
+6. Open the agent's **Tools** list and **turn off anything already selected**. At minimum you will find the built-in **Web search** tool enabled; the portal switches it on for you.
+7. Save the agent.
+
+> **⚠️ Always inspect what is already enabled.** New agents can include tools such as **Web search** by default. Turn them off for this baseline so you can clearly see what the agent can and cannot do before you add capabilities.
 
 ### Step 2: Define the Initial Contract
 
@@ -78,7 +82,6 @@ Scope:
 
 Authority:
 - Never claim that an action succeeded unless a connected tool returned evidence that it succeeded.
-- You currently have no lightbulb control tool and no authoritative SmartGlow product source.
 - State limitations clearly, ask one concise clarification question when needed, and do not invent capabilities or facts.
 
 Response style:
@@ -106,6 +109,8 @@ Record whether the agent:
 - States that it cannot yet control the light
 - Avoids inventing SmartGlow specifications
 
+**If the agent answers the colour question anyway** — usually a fluent list of five colours — it still has a web tool attached. Go back to Step 1 and confirm every tool is off, then start a new conversation and run the prompt again. The answer may even be correct; that is what makes it worth catching. An agent that reaches an unintended source and happens to be right is a problem you have not found yet, not a problem you do not have.
+
 You will reverse both of these limits deliberately: the second in Unit 2, the first in Unit 4.
 
 ### Step 4: Inspect the Capability Boundary
@@ -116,12 +121,12 @@ Review the agent configuration:
 |---|---|
 | Model response | ✅ Available |
 | Explicit purpose and scope | ✅ Defined in instructions |
-| Current web information | ❌ No web-grounding source connected |
+| Current web information | ❌ None — after you turned off the default **Web search** tool in Step 1 |
 | SmartGlow product evidence | ❌ No document or knowledge base connected |
 | External actions | ❌ No MCP tools connected |
 | Persistent memory | ❌ Not configured |
 
-This baseline is intentional. In later units, each new capability will come with an explicit source, permission, and validation step.
+Always inspect what is already enabled. An agent's actual boundary includes both the capabilities you add and any defaults that were already selected. In later units, you will add capabilities one at a time and test each one.
 
 ---
 
