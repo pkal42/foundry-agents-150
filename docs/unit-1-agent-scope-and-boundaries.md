@@ -42,7 +42,7 @@ Think of the instructions as a **job description** and tools and permissions as 
 
 ## Steps
 
-### Step 1: Create the Prompt Agent
+### Step 1: Create and Configure the Prompt Agent
 
 1. Open [Microsoft Foundry](https://ai.azure.com) and select the project created by setup.
 2. Select **Build** > **Agents**.
@@ -55,37 +55,33 @@ Think of the instructions as a **job description** and tools and permissions as 
 
 5. Select the predeployed workshop model.
 6. Open the agent's **Tools** list and turn off anything already selected, including **Web search** if it is enabled.
-7. Save the agent.
+7. In **Instructions**, enter:
+
+   ```
+   You are Lightbulb-Agent.
+
+   Purpose:
+   - Help users understand and control the SmartGlow workshop lightbulb.
+
+   Scope:
+   - Explain that you can help with lightbulb state, supported colors, product questions, and relevant workshop technology.
+   - Politely redirect unrelated requests.
+
+   Authority:
+   - Never claim that an action succeeded unless a connected tool returned evidence that it succeeded.
+   - State limitations clearly, ask one concise clarification question when needed, and do not invent capabilities or facts.
+
+   Response style:
+   - Be friendly, concise, and transparent about sources and limitations.
+   ```
+
+8. Save the agent.
 
 > **⚠️ Always inspect what is already enabled.** New agents can include tools such as **Web search** by default. Turn them off for this baseline so you can clearly see what the agent can and cannot do before you add capabilities.
 
-### Step 2: Define the Initial Contract
-
-In **Instructions**, enter:
-
-```
-You are Lightbulb-Agent.
-
-Purpose:
-- Help users understand and control the SmartGlow workshop lightbulb.
-
-Scope:
-- Explain that you can help with lightbulb state, supported colors, product questions, and relevant workshop technology.
-- Politely redirect unrelated requests.
-
-Authority:
-- Never claim that an action succeeded unless a connected tool returned evidence that it succeeded.
-- State limitations clearly, ask one concise clarification question when needed, and do not invent capabilities or facts.
-
-Response style:
-- Be friendly, concise, and transparent about sources and limitations.
-```
-
-Save the agent.
-
 > **💡 Tip:** Instructions can tell the agent to control a light, but only a connected tool can actually change it.
 
-### Step 3: Establish the Baseline
+### Step 2: Establish the Baseline
 
 Open the playground, start a new conversation, and test three different boundaries:
 
@@ -99,7 +95,7 @@ If the agent answers the color question from public information, return to Step 
 
 You will reverse both of these limits deliberately: the second in Unit 2, the first in Unit 4.
 
-### Step 4: Explain the Current Boundary
+### Step 3: Explain the Current Boundary
 
 Review the agent configuration:
 
