@@ -82,7 +82,7 @@ The portal might show only the MCP server connection during setup rather than li
 | `toggle_light` | Write | Changes the current power state |
 | `set_color` | Write | Sets `red`, `green`, `blue`, `yellow`, or `white` |
 
-> **💡 Tip:** A schema is both routing context and an API boundary. The backend must still validate every argument and caller.
+> **📝 Note:** A schema is both routing context and an API boundary. The backend must still validate every argument and caller.
 
 `toggle_light` changes the current state rather than directly setting “on” or “off.” When the requested final state matters, the agent should read the state first.
 
@@ -157,6 +157,10 @@ This checklist covers **tool design** — what you review before connecting a re
 - **Errors:** Unsupported or unsuccessful actions are reported clearly and never described as successful.
 
 Authentication, authorization, approval, and observability are equally required, but they are enforced by the backend rather than by the tool contract. Unit 6 covers them.
+
+### Enterprise Takeaway
+
+Connect tools through narrow contracts, separate reads from writes, and verify actions with returned evidence and visible application state. MCP standardizes tool discovery and invocation, but the backend still owns validation, authorization, and audit.
 
 ---
 
