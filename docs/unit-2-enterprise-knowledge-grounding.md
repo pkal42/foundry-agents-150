@@ -153,7 +153,7 @@ Treat a fluent answer as a failure if its citation points to public GitHub, anot
 
 ### Optional Step 3: Create or Inspect a Curated Foundry IQ Knowledge Base
 
-> **🎤 Instructor demonstration:** Steps 3–4 are normally demonstrated rather than performed by participants, because the uploaded files from Step 2 carry every later unit. See the [instructor demo script](./instructor-demo-script.md#unit-2--enterprise-knowledge-and-grounding). Run them yourself only if your facilitator says the schedule allows.
+> **🎤 Instructor demonstration:** Steps 3–4 are normally demonstrated rather than performed by participants, because the uploaded files from Step 2 carry every later unit. Run them yourself only if your facilitator says the schedule allows.
 
 Complete this extension only when Azure AI Search and Foundry IQ are available. Otherwise, continue to Step 5 with the uploaded files.
 

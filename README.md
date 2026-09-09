@@ -44,7 +44,7 @@ The workshop runs as eight units in order. Each builds on the agent produced by 
 | 11 | **Unit 8** — Version, publish, and operate |
 | 12 | Wrap-up and next-capability decision |
 
-Facilitators: session budget, per-unit estimates, cut order, preparation checklist, and per-unit talking points are in the **[instructor demo script](docs/instructor-demo-script.md)**.
+Session budget, per-unit estimates, cut order, and the preparation checklist are kept in the facilitator's own materials rather than in this repository, so that participant steps carry no timing.
 
 ### Demo track: where the advanced material lives
 
@@ -61,7 +61,7 @@ Two further advanced topics are covered by discussion only, with no environment 
 - **Unit 6** raises indirect prompt injection and the tool-call and tool-response guardrail intervention points.
 - **Unit 8, Step 4** maps the capabilities deliberately left out — hosted agents, Memory, Routines, long-running and autopilot patterns, A2A, and human-in-the-loop — to the requirement that would justify each. Read it alongside the [Feature Maturity](#feature-maturity) table below, which records the current status of the same capabilities.
 
-Cutting a demo costs coverage of an advanced concept but never breaks a later unit. The cut order is in the [instructor demo script](docs/instructor-demo-script.md).
+Cutting a demo costs coverage of an advanced concept but never breaks a later unit. Cut them in the order listed above.
 
 ## Lab Units
 
@@ -168,7 +168,12 @@ azd env set AZURE_APP_SERVICE_PLAN_SKU P0V3
 azd up
 ```
 
-The default is `B1`. Allowed values are `B1`, `B2`, `B3`, `S1`, `S2`, `P0V3`, `P1V3`, and `P2V3`. Facilitators should read the [deployment problems](docs/instructor-demo-script.md#deployment-problems-seen-in-practice) table before the first provisioning attempt.
+The default is `B1`. Allowed values are `B1`, `B2`, `B3`, `S1`, `S2`, `P0V3`, `P1V3`, and `P2V3`.
+
+Two further constraints are worth knowing before the first attempt:
+
+- If `azd up` reports `Soft-deleted workspace exists` even after `azd down --purge` succeeded, the Foundry account purges but an AML-side workspace is retained, and it is not enumerable through ARM. Provision under a **new `azd` environment name** — the resource token derives from it, so a new name sidesteps the retained one. Retrying the same name does not clear it.
+- A failed `azd up` leaves successfully created resources in place, and `azd up` is incremental. Fix the one failing resource and rerun rather than tearing the environment down.
 
 The infrastructure provisions:
 

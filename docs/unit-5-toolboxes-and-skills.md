@@ -8,7 +8,7 @@ You'll consume a prepared, versioned **Toolbox** and **Skill** rather than insta
 
 > **📝 Preview note:** Toolboxes and Skills evolve quickly and can have regional, model, SDK, or portal limitations. Treat them as preview unless the current [Toolbox documentation](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/toolbox) and [Skills documentation](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/skills) state otherwise for your exact scenario.
 
-> **🎤 Instructor demonstration:** This unit is normally demonstrated, with participants following along in the portal. It is inspection and discussion rather than authoring. If the preview is unavailable in your environment, read the unit and discuss the operating model — no later unit depends on it. See the [instructor demo script](./instructor-demo-script.md#unit-5--reusable-tools-and-skills).
+> **🎤 Instructor demonstration:** This unit is normally demonstrated, with participants following along in the portal. It is inspection and discussion rather than authoring. If the preview is unavailable in your environment, read the unit and discuss the operating model — no later unit depends on it.
 
 ---
 

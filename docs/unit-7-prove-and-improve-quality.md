@@ -230,7 +230,7 @@ Scheduled or continuous evaluations, red-team scans, and alerts can be preview o
 
 > **🧪 Preview:** Agent Optimizer is a preview capability. Confirm it is enabled in your environment. If it is not, read this step and watch the instructor demonstration.
 
-> **🎤 Instructor demonstration:** This step is normally demonstrated rather than performed by participants. The optimization run issues real tool calls against the lightbulb, so expect its state to change. See the [instructor demo script](./instructor-demo-script.md#unit-7--prove-and-improve-agent-quality). Run it yourself only if your facilitator says the schedule allows.
+> **🎤 Instructor demonstration:** This step is normally demonstrated rather than performed by participants. The optimization run issues real tool calls against the lightbulb, so expect its state to change. Run it yourself only if your facilitator says the schedule allows.
 
 Steps 6 and 7 had you change one thing, version it, rerun the dataset, and compare. Agent Optimizer runs that same loop automatically: it evaluates a baseline, generates candidate configurations, scores each against the same dataset, and ranks them.
 
