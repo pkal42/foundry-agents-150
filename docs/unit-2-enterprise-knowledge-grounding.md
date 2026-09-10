@@ -62,20 +62,23 @@ An explicit supersession statement controls only the subjects it covers. If auth
 
 ### Step 1: Add Current Public Knowledge
 
-The workshop uses **Grounding with Bing Search** for current public information. Your organization owns the Bing resource, and you will connect it to the Foundry project before adding it to the agent.
+The workshop uses **Grounding with Bing Search** to let the agent look things up on the public web.
+
+You do not need to create anything in Azure for this step. The `azd up` template already deployed the Bing resource (`infra/modules/bing-grounding.bicep`) and created the connection to it with `isSharedToAll: true`, which is why your project can already see it. You only attach the tool to the agent.
 
 1. Open **Build** > **Agents** > **Lightbulb-Agent**.
 2. In **Tools**, select **Add**, then choose **Grounding with Bing Search** from **Configured** or **Catalog**.
-11. Select the preprovisioned **Grounding with Bing Search** connection for the workshop.
-12. Confirm that no other web tool is selected. The agent should have one clear route to public information.
-13. Save the agent and start a new conversation.
-14. Test:
+3. Select the workshop Bing connection created by `azd up`. It is named `<foundry-resource-name>-bingsearchconnection`.
+4. Check that no other web tool is turned on. You want exactly one route to the public web, so you can tell where an answer came from.
+5. Save the agent and start a new conversation.
+6. Test:
 
    ```
    What are the latest developments in smart-home lighting? Cite the public sources you used.
    ```
 
-Confirm that the answer includes current public sources.
+The answer should include links to current public pages. If it does not, the tool is probably not attached — recheck steps 2 and 3.
+
 Now ask:
 
 ```
@@ -137,7 +140,55 @@ Check which source supports each part:
 | What the participant should do | Support Policy version 2.0 |
 | What support should check | Operations Runbook version 1.1 |
 
-#### Test 2: Recognize Missing Evidence
+> **📝 Note: what this test does and does not prove.** Each part of this question belongs to a *different* document, so ordinary relevance-based retrieval usually routes it correctly — **this test normally passes even without the rule you just added.** That is expected. It shows the agent can assemble one answer from several sources, which is worth seeing, but it is not evidence that source authority is working. Test 2 is the one that measures the rule.
+
+#### Test 2: Resolve a Real Conflict
+
+The three documents are not merely different topics. Two of them **contradict each other on the same subject**, in three separate places:
+
+| Product Manual v1.0 says | Where | Support Policy v2.0 says |
+|---|---|---|
+| "Run the deployment command: `azd up`" | *Getting Started*, Step 1 | Participants must not run `azd up` |
+| "You may need to re-run `azd up` if the deployment failed" | *Troubleshooting FAQ* | Report the issue to the support owner instead |
+| "To file a warranty claim, simply restart your deployment by running `azd up`" | *How to Make a Warranty Claim* | Report failures to the support owner rather than redeploying |
+
+The third row is the sharpest: Policy v2.0 names **warranty claims** as one of the subjects it supersedes, and the manual's entire warranty procedure is "run `azd up`." Both documents answer "how do I, the participant, get a working environment?" Only the precedence rule decides which one wins. Run:
+
+```
+My environment is broken. The product manual's Getting Started section says to run `azd up` to deploy the SmartGlow 101. Should I run it now to fix my environment?
+```
+
+A correct answer:
+
+1. Says **no**, do not run `azd up`.
+2. Cites **Support Policy version 2.0**, not the manual.
+3. States that the policy supersedes the manual for participant support and deployment actions.
+4. Gives the policy's actual procedure — check the assigned identity, capture the links, report to the support owner, continue with the demonstration.
+
+A strong answer does one more thing: it **names the conflict out loud** rather than silently picking a side. "The manual says X, the policy says Y, the policy supersedes it here" is more auditable than a bare "no," because a reviewer can see which rule was applied.
+
+**Follow-up worth running:** ask `How do I file a warranty claim?` The manual's warranty procedure is literally "run `azd up`," and Policy v2.0 lists warranty claims among the subjects it supersedes. This is the narrowest, cleanest version of the conflict.
+
+**Now remove the precedence rule you added at the start of Step 3, save, and run the same prompt in a new conversation.** Keep the Step 2 source rule in place, so you change only one variable.
+
+Expect a *subtler* difference than you might predict. In testing, the agent still found the right answer without the rule — because the supersession is written inside the policy document itself ("It supersedes support and warranty-claim instructions in Product Manual version 1.0"), so it can be retrieved rather than instructed. What degraded was everything around the answer:
+
+| | With the rule | Without it |
+|---|---|---|
+| Verdict | "No, not as a participant" | "Probably not" |
+| Scope | Assumes the workshop context | Asks which kind of environment you have |
+| The forbidden action | Stays closed | **Reopened** — "if this is your own self-managed deployment, re-running it may help" |
+
+That last row is the risk. The answer is not wrong, but it hands the policy decision back to the person the policy exists to constrain, and a user skimming for permission will find it in the second branch.
+
+**The honest lesson:** here the rule buys decisiveness and correct scope assumption, not source selection. That is a real benefit and a smaller one than "the agent gets it wrong without the rule." Two things follow, and both matter more than the rule itself:
+
+- **Write precedence into the documents, not only into the prompt.** The policy's own supersession sentence did most of the work, and it keeps working for every agent that retrieves it and for the humans who read it.
+- **Instructions still matter for how an answer is delivered** — how decisive it is, what context it assumes, and whether it leaves a forbidden door open.
+
+If your run differs from the table above, that is worth recording rather than correcting. Model behavior is not deterministic, and the point of this test is that you now have a way to *observe* the rule's contribution instead of assuming it.
+
+#### Test 3: Recognize Missing Evidence
 
 ```
 What is SmartGlow's policy for international warranty transfers?

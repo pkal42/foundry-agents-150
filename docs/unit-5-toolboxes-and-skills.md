@@ -17,7 +17,6 @@ Before starting this unit, make sure you have:
 - ✅ Completed [Unit 4](./unit-4-mcp-tools-and-actions.md)
 - ✅ Access to **Lightbulb-Agent**
 - ✅ `Lightbulb-Controller` from Unit 4 appears under **Build** > **Tools** > **Configured**
-- ✅ The Microsoft Foundry project endpoint and **Foundry User** role
 - ✅ The deployed lightbulb MCP endpoint, `{AZURE_WEBAPP_URL}/mcp`
 - ✅ The **Tools** > **Skills** and **Toolboxes** preview pages are available in the Foundry portal
 
@@ -46,12 +45,12 @@ Agent A --\
 Agent B ----> shared-lightbulb-toolbox
 Agent C --/       |-- Tool search
                   |-- Lightbulb-Controller
+                  |-- lightbulb-assistant Skill
                   |-- Knowledge search tool
-                  |-- Support system tool
-                  `-- lightbulb-assistant Skill
+                  `-- Support system tool
 ```
 
-The workshop adds one configured tool, but a production Toolbox can contain many tools and Skills. Each agent still needs one connection to the shared Toolbox endpoint, but it no longer needs separate connections to every underlying capability.
+You will build: one Toolbox holding one tool connection, one Skill, and Tool search. A production Toolbox would hold many more — a knowledge search tool, a ticketing tool, and so on — but each agent would still need only the one connection to the Toolbox endpoint.
 
 | Resource | What it shares | SmartGlow example |
 |---|---|---|
@@ -147,11 +146,7 @@ The Toolbox does not appear in the prompt agent's configured-tool catalog. It is
 10. Save the agent.
 11. Start a completely new playground conversation. Do not reuse the Unit 4 conversation because it can retain references to the old direct tool names.
 
-Removing the direct connection ensures that the next test must use the Toolbox. If the test fails, you can re-add the configured `Lightbulb-Controller` as a rollback.
-
-The new MCP entry is only the prompt agent's connection to the Toolbox gateway. It does not recreate `Lightbulb-Controller`, the SmartGlow tools, or the Skill.
-
-> **📝 Note:** The Foundry portal can connect a prompt agent to a same-project Toolbox through its managed runtime while the connection is labeled **Unauthenticated**. A raw external client calling the Toolbox URL directly still requires a Microsoft Entra token for `https://ai.azure.com/.default`. Authentication from the Toolbox to the underlying lightbulb MCP server is a separate boundary and is also unauthenticated only for this bounded workshop.
+Removing the direct connection makes the Toolbox the only remaining route to the lightbulb, so a successful test proves the request went through it. If the test fails, you can re-add the configured `Lightbulb-Controller` as a rollback.
 
 ### Step 4: Verify the Shared Behavior
 

@@ -29,7 +29,7 @@ Before starting this unit, make sure you have:
 An MCP server exposes tools with:
 
 - A **name** and **description** used for selection
-- An **input schema** that constrains arguments
+- An **input schema** that declares the arguments, and can constrain them
 - A result shape the agent must interpret
 - A transport, typically **Streamable HTTP** for remote servers
 - An authentication and authorization model
@@ -82,7 +82,7 @@ The portal might show only the MCP server connection during setup rather than li
 | `toggle_light` | Write | Changes the current power state |
 | `set_color` | Write | Sets `red`, `green`, `blue`, `yellow`, or `white` |
 
-> **📝 Note:** A schema is both routing context and an API boundary. The backend must still validate every argument and caller.
+> **📝 Note:** A schema is routing context for the model and a declaration of the API's shape. It is not enforcement. In production the backend must validate every argument **and every caller** — this workshop's server validates arguments but authenticates no one, which is why the endpoint is safe only as a bounded lab.
 
 `toggle_light` changes the current state rather than directly setting “on” or “off.” When the requested final state matters, the agent should read the state first.
 

@@ -16,7 +16,7 @@ Before starting this unit, make sure you have:
 - ✅ The workshop identity 
 - ✅ The lightbulb application link
 
-> **📝 Note:** The organizer provisions and validates the environment before the workshop. Participants do not run `azd`, deploy resources, or change Azure role assignments. Use the **Foundry (new)** experience; portal labels can change, but this workshop uses **Build** > **Agents** and a prompt agent configured in the portal.
+> **📝 Note:** Everything you need was already created by the `azd up` deployment template in this repository — the Foundry account and project, both model deployments, the lightbulb web app and its MCP server, Grounding with Bing, Application Insights, and the role assignments. You do not run `azd`, deploy resources, or change Azure role assignments during the workshop. If you want to see exactly what was created, read `infra/main.bicep` and the modules beside it. Use the **Foundry (new)** experience; portal labels can change, but this workshop uses **Build** > **Agents** and a prompt agent configured in the portal.
 
 ---
 
@@ -53,7 +53,7 @@ Think of the instructions as a **job description** and tools and permissions as 
    Lightbulb-Agent
    ```
 
-5. Select the predeployed workshop model.
+5. Select the workshop model. The `azd up` template deployed two: `gpt-5.4` for the agent, and `gpt-5.4-mini`, which Unit 7 uses as the evaluation judge. Choose **`gpt-5.4`** here.
 6. Open the agent's **Tools** list and turn off anything already selected, including **Web search** if it is enabled.
 7. In **Instructions**, enter:
 
@@ -85,11 +85,13 @@ Think of the instructions as a **job description** and tools and permissions as 
 
 Open the playground, start a new conversation, and test three different boundaries:
 
-| Test | Prompt | Expected behavior |
+| Test | Prompt | What a correct run looks like |
 |---|---|---|
 | **Action** | `Turn on the light.` | Explains that no control tool is connected and does not claim the light changed |
 | **Knowledge** | `What colors does the SmartGlow 101 support?` | Says the product information is not available instead of guessing |
 | **Scope** | `Plan my vacation.` | Politely explains that the request is outside the agent's purpose |
+
+> **📝 Note:** These are expected results, not guaranteed ones. Language models are not deterministic, so the same prompt can behave differently between runs. If a row does not match, rerun it once in a fresh conversation before you start changing the agent.
 
 If the agent answers the color question from public information, return to Step 1 and confirm that **Web search** and every other tool are off. Start a new conversation and test again.
 
